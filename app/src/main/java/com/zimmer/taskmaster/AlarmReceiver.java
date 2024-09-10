@@ -13,20 +13,23 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // Recuperar el nombre del recordatorio desde el Intent
+        String reminderName = intent.getStringExtra("reminder_name");
+
         // Crear un intent para abrir la aplicación cuando se toque la notificación
         Intent notificationIntent = new Intent(context, Menu.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Crear la notificación
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "REMINDER_CHANNEL")
-                .setSmallIcon(R.drawable.notification_icon) // Reemplaza con tu propio icono
+                .setSmallIcon(R.drawable.notification_icon) // Asegúrate de tener este icono en res/drawable
                 .setContentTitle("Recordatorio")
-                .setContentText("Es hora de revisar tus tareas!")
+                .setContentText(reminderName != null ? reminderName : "Tienes un recordatorio!")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        // Mostrar la notificación
+        // Obtener el NotificationManager
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Crear el canal de notificaciones si es necesario (Android O y superior)
